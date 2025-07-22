@@ -1,3 +1,9 @@
+import Navigation from "./components/Navigation";
+
 export default function Page() {
-  return <h1>Welcome to Cabino agency</h1>;
+  return (
+    <div>
+      <h1>Welcome to Cabino agency</h1>
+    </div>
+  );
 }
