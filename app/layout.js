@@ -1,5 +1,6 @@
 import Logo from "./_components/Logo";
 import Navigation from "./_components/Navigation";
+import "@/app/_styles/globals.css";
 
 export const metadata = {
   title: "Cabino Agency",
