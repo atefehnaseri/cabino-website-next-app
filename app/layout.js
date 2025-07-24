@@ -1,6 +1,3 @@
-import Logo from "./_components/Logo";
-import Navigation from "./_components/Navigation";
-
 import { Josefin_Sans } from "next/font/google";
 
 const josefin = Josefin_Sans({
@@ -13,8 +10,8 @@ import Header from "./_components/Header";
 
 export const metadata = {
   title: {
+    template: "%s Cabino Agency",
     default: "Cabino Agency",
-    template: "%s  Cabino Agency",
   },
   description: "Cabino agency website, located in the heart of the city.",
 };
