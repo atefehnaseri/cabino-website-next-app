@@ -10,7 +10,7 @@ import Header from "./_components/Header";
 
 export const metadata = {
   title: {
-    template: "%s Cabino Agency",
+    template: "%s | Cabino Agency",
     default: "Cabino Agency",
   },
   description: "Cabino agency website, located in the heart of the city.",
