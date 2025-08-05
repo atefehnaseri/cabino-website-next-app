@@ -1,6 +1,10 @@
 "use client";
 
+import { useReservationContext } from "./ReservationContext";
+
 function ReservationForm({ cabin }) {
+  const { dateRange } = useReservationContext();
+
   const { maxCapacity } = cabin;
 
   return (
@@ -60,6 +64,9 @@ function ReservationForm({ cabin }) {
           </button>
         </div>
       </form>
+      <p>
+        {String(dateRange.from)} {String(dateRange.to)}
+      </p>
     </div>
   );
 }
