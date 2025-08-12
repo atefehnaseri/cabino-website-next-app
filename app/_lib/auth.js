@@ -13,6 +13,9 @@ const authConfig = {
       return !!auth?.auth?.user;
     },
   },
+  pages: {
+    signIn: "/login",
+  },
 };
 export const {
   handlers: { GET, POST },
