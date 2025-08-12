@@ -35,7 +35,6 @@ export default function Filter() {
   };
 
   function handleFilter(filter) {
-    console.log(filter);
     router.replace(
       `${pathname + "?" + createQueryString("capacity", filter)}`,
       { scroll: false }
