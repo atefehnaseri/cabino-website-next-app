@@ -12,8 +12,8 @@ import { useReservationContext } from "./ReservationContext";
 
 function isAlreadyBooked(range, datesArr) {
   return (
-    range.from &&
-    range.to &&
+    range?.from &&
+    range?.to &&
     datesArr.some((date) =>
       isWithinInterval(date, { start: range.from, end: range.to })
     )
@@ -27,10 +27,8 @@ function DateSelector({ settings, bookedDates, cabin }) {
     : dateRange;
 
   const { regularPrice, discount } = cabin;
-  const numNights = differenceInDays(
-    displayDateRange.to,
-    displayDateRange.from
-  );
+  const numNights =
+    differenceInDays(displayDateRange?.to, displayDateRange?.from) || 0;
   const cabinPrice = (regularPrice - discount) * numNights;
 
   const { minBookingLength, maxBookingLength } = settings;
@@ -83,7 +81,7 @@ function DateSelector({ settings, bookedDates, cabin }) {
           ) : null}
         </div>
 
-        {dateRange.from || dateRange.to ? (
+        {dateRange?.from || dateRange?.to ? (
           <button
             className="border border-primary-800 py-2 px-4 text-sm font-semibold"
             onClick={resetRange}

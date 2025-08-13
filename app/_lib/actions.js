@@ -111,3 +111,27 @@ export async function updateReservationAction(formData) {
   //redirect to the reservations page
   redirect("/account/reservations");
 }
+
+export async function createNewReservationAction(newReservationData, formData) {
+  const session = await auth();
+  if (!session)
+    throw new Error(
+      "You must be logged in in order to create a new reservation!"
+    );
+
+  const newReservation = {
+    ...newReservationData,
+    numGuests: Number(formData.get("numGuests")),
+    observations: formData.get("observations").slice(0, 1000),
+  };
+
+  const { error } = await supabase.from("bookings").insert([newReservation]);
+
+  if (error) {
+    console.error(error);
+    throw new Error("Booking could not be created");
+  }
+
+  //revalidate the reservation page
+  revalidatePath(`/account/reservations/${newReservationData.cabinId}`);
+}

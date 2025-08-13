@@ -1,11 +1,40 @@
 "use client";
 
+import { createNewReservationAction } from "@/app/_lib/actions";
 import { useReservationContext } from "./ReservationContext";
+import { differenceInDays, isSameDay } from "date-fns";
+import SubmitButton from "./SubmitButton";
 
 function ReservationForm({ cabin, user }) {
-  const { dateRange } = useReservationContext();
+  const { dateRange, resetRange } = useReservationContext();
+  const startDate = dateRange?.from;
+  const endDate = dateRange?.to;
+  const { maxCapacity, regularPrice, discount, id: cabinId } = cabin;
 
-  const { maxCapacity } = cabin;
+  const numNights = differenceInDays(endDate, startDate) || 0;
+
+  const cabinPrice = (regularPrice - discount) * numNights;
+
+  const guestId = Number(user.guestId);
+
+  const newReservationData = {
+    startDate,
+    endDate,
+    numNights,
+    cabinPrice,
+    extrasPrice: 0,
+    totalPrice: cabinPrice,
+    status: "unconfirmed",
+    hasBreakfast: false,
+    isPaid: false,
+    cabinId,
+    guestId,
+  };
+
+  const createNewReservationByData = createNewReservationAction.bind(
+    null,
+    newReservationData
+  );
 
   return (
     <div className="scale-[1.00]">
@@ -24,7 +53,14 @@ function ReservationForm({ cabin, user }) {
         </div>
       </div>
 
-      <form className="bg-primary-900 py-10 px-16 text-lg flex gap-5 flex-col">
+      <form
+        // action={createNewReservationByData}
+        action={async (formData) => {
+          await createNewReservationByData(formData);
+          resetRange();
+        }}
+        className="bg-primary-900 py-10 px-16 text-lg flex gap-5 flex-col"
+      >
         <div className="space-y-2">
           <label htmlFor="numGuests">How many guests?</label>
           <select
@@ -57,11 +93,13 @@ function ReservationForm({ cabin, user }) {
         </div>
 
         <div className="flex justify-end items-center gap-6">
-          <p className="text-primary-300 text-base">Start by selecting dates</p>
-
-          <button className="bg-accent-500 px-8 py-4 text-primary-800 font-semibold hover:bg-accent-600 transition-all disabled:cursor-not-allowed disabled:bg-gray-500 disabled:text-gray-300">
-            Reserve now
-          </button>
+          {!startDate || !endDate || isSameDay(startDate, endDate) ? (
+            <p className="text-primary-300 text-base">
+              Start by selecting dates
+            </p>
+          ) : (
+            <SubmitButton pendingLabel="Reserving...">Reserve now</SubmitButton>
+          )}
         </div>
       </form>
     </div>
