@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { auth, signIn, signOut } from "./auth";
 import { getBookings } from "./data-service";
 import { supabase } from "./supabase";
+import { redirect } from "next/navigation";
 
 export async function signInAction() {
   return await signIn("google", { redirectTo: "/account" });
@@ -26,7 +27,7 @@ export async function updateGuestProfileAction(formData) {
     throw new Error("Please provide a valid national ID");
 
   const updatedData = { nationality, countryFlag, nationalID };
-  const { data, error } = await supabase
+  const { error } = await supabase
     .from("guests")
     .update(updatedData)
     .eq("id", session.user.guestId)
@@ -67,4 +68,46 @@ export async function deleteReservation(reservationId) {
 
   //revalidate the page
   revalidatePath("/account/reservations");
+}
+
+export async function updateReservationAction(formData) {
+  const reservationId = Number(formData.get("reservationId"));
+
+  const session = await auth();
+  if (!session)
+    throw new Error(
+      "You must be logged in in order to update your reservation!"
+    );
+
+  //more protection on updating a booking
+  const guestBookings = await getBookings(session.user.guestId);
+  const guestBookingIds = guestBookings.map((booking) => booking.id);
+  if (!guestBookingIds.includes(reservationId))
+    throw new Error("You are not allowed to update this booking!");
+
+  const observations = formData.get("observations").slice(0, 1000);
+  const formattedNumGuests = Number(formData.get("numGuests"));
+
+  const updatedData = {
+    numGuests: formattedNumGuests,
+    observations,
+  };
+
+  const { error } = await supabase
+    .from("bookings")
+    .update(updatedData)
+    .eq("id", reservationId)
+    .select()
+    .single();
+
+  if (error) {
+    console.error(error);
+    throw new Error("Booking could not be updated");
+  }
+
+  //revalidate the page
+  revalidatePath(`/account/reservations/edit/${reservationId}`);
+
+  //redirect to the reservations page
+  redirect("/account/reservations");
 }
