@@ -134,4 +134,7 @@ export async function createNewReservationAction(newReservationData, formData) {
 
   //revalidate the reservation page
   revalidatePath(`/account/reservations/${newReservationData.cabinId}`);
+
+  //redirect to the thank you page
+  redirect("/cabins/thankyou");
 }
