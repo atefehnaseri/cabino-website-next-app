@@ -38,3 +38,6 @@
   --rdp-range_middle-background-color: theme("colors.accent.600") !important;
   margin: 0 !important;
 }
+.rdp-months {
+  flex-wrap: nowrap !important;
+}
