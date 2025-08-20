@@ -36,8 +36,9 @@ function DateSelector({ settings, bookedDates, cabin }) {
   return (
     <div className="flex flex-col justify-between">
       <DayPicker
-        className="pt-12 place-self-center"
+        className="py-12 place-self-center"
         mode="range"
+        pagedNavigation
         min={minBookingLength + 1}
         max={maxBookingLength}
         startMonth={new Date()}

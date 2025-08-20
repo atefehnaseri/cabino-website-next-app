@@ -9,11 +9,11 @@ function Logo() {
         height="60"
         width="60"
         quality="100"
-        alt="The Wild Oasis logo"
+        alt="The Cabino Agency logo"
         priority
       />
       <span className="text-xl font-semibold text-primary-100">
-        The Wild Oasis
+        The Cabino Agency
       </span>
     </Link>
   );
